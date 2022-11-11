@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   deploy_prod_gcp:
-    name: Deploy alert to prod-gcp
+    name: Deploy alerts to prod-gcp
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
