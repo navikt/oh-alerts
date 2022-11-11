@@ -1,0 +1,31 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: oh-alerts
+  namespace: oppgavehandtering
+  labels:
+    team: oppgavehandtering
+spec:
+  receivers:
+    slack:
+      channel: '#oh-alerts'
+      prependText:  '<!here> | '
+      send_resolved: true
+      icon_emoji: ':naiser:'
+  route:
+    repeat_interval: 3h
+  alerts:
+    - alert: errorRate
+      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_team="oppgavehandtering",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_team="oppgavehandtering"}[5m]))) > 10
+      for: 5m
+      description: "Høy feilrate: {{  $value | printf \"%.1f\" }} % i {{ $labels.log_app }} "
+      action: "Sjekk logger"
+      severity: danger
+    - alert: appDown
+      expr: max(up{team="oppgavehandtering" ,job="kubernetes-pods"}) by (app) == 0
+      for: 10m
+      description: "{{ $labels.app }} er nede"
+      action: "Sjekk logger"
+      severity: warning
+
+
