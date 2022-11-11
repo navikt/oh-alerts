@@ -2,7 +2,7 @@ name: Deploy Oppgavehåndtering Alerts
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   deploy_prod_gcp:
     name: Deploy alert to prod-gcp
