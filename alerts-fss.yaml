@@ -22,8 +22,8 @@ spec:
       action: "Sjekk logger"
       severity: danger
     - alert: appDown
-      expr: max(up{team="oppgavehandtering" ,job="kubernetes-pods"}) by (app) == 0
-      for: 10m
+      expr: sum(kube_deployment_status_replicas_available{namespace="oppgavehandtering"}) by (deployment) == 0
+      for: 2m
       description: "{{ $labels.app }} er nede"
       action: "Sjekk logger"
       severity: warning

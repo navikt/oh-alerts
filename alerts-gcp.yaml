@@ -17,13 +17,13 @@ spec:
   alerts:
     - alert: errorRate
       expr: (100 * sum by (log_app) (rate(logd_messages_total{log_team="oppgavehandtering",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_team="oppgavehandtering"}[5m]))) > 10
-      for: 5m
+      for: 2m
       description: "Høy feilrate: {{  $value | printf \"%.1f\" }} % i {{ $labels.log_app }} "
       action: "Sjekk logger"
       severity: danger
     - alert: appDown
-      expr: max(up{team="oppgavehandtering",job="kubernetes-pods"}) by (app) == 0
-      for: 10m
+      expr: sum(kube_deployment_status_replicas_available{namespace="oppgavehandtering"}) by (deployment) == 0
+      for: 2m
       description: "{{ $labels.app }} er nede"
       action: "Sjekk logger"
       severity: danger
